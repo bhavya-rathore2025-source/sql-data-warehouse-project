@@ -8,7 +8,7 @@ and load new data into those tables
 
 
 # --- Connection details ---
-server = 'DESKTOP-5EU8KIE\SQLEXPRESS'      # e.g. 'DESKTOP-12345\\SQLEXPRESS'
+server = r'DESKTOP-5EU8KIE\SQLEXPRESS'      # e.g. r'DESKTOP-12345\\SQLEXPRESS'
 database = 'DataWarehouse'  # e.g. 'mydb'
 
 
@@ -97,54 +97,59 @@ create table bronze.erp_PX_CAT_G1V2 (
 conn.commit()
 
 #Loading the data into tabel(truncate and load)
+
 cursor.execute(r"""
 use DataWarehouse
+-- IMPORTANT: SQL Server BULK INSERT requires an absolute path accessible by the SQL Server service.
+-- Example absolute path (update as needed):
+-- BULK INSERT bronze.crm_cust_info FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_crm\\cust_info.csv'
 Truncate table bronze.crm_cust_info
-BUlK INsert bronze.crm_cust_info FROM 'C:\Users\MY PC\Documents\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
+BUlK INsert bronze.crm_cust_info FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_crm\\cust_info.csv'
 with (
-	FirstRow=2,
-	fieldterminator=','
+    FirstRow=2,
+    fieldterminator=','
 )
 Truncate table bronze.crm_prd_info
-BUlK INsert bronze.crm_prd_info FROM 'C:\Users\MY PC\Documents\sql-data-warehouse-project\datasets\source_crm\prd_info.csv'
+BUlK INsert bronze.crm_prd_info FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_crm\\prd_info.csv'
 with (
-	FirstRow=2,
-	fieldterminator=','
+    FirstRow=2,
+    fieldterminator=','
 )
 Truncate table bronze.crm_sales_details
-BUlK INsert bronze.crm_sales_details FROM 'C:\Users\MY PC\Documents\sql-data-warehouse-project\datasets\source_crm\sales_details.csv'
+BUlK INsert bronze.crm_sales_details FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_crm\\sales_details.csv'
 with (
-	FirstRow=2,
-	fieldterminator=','
+    FirstRow=2,
+    fieldterminator=','
 )
 Truncate table bronze.erp_CUST_AZ12
-BUlK INsert bronze.erp_CUST_AZ12 FROM 'C:\Users\MY PC\Documents\sql-data-warehouse-project\datasets\source_erp\CUST_AZ12.csv'
+BUlK INsert bronze.erp_CUST_AZ12 FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_erp\\CUST_AZ12.csv'
 with (
-	FirstRow=2,
-	fieldterminator=','
+    FirstRow=2,
+    fieldterminator=','
 )
 Truncate table bronze.erp_LOC_A101
-BUlK INsert bronze.erp_LOC_A101 FROM 'C:\Users\MY PC\Documents\sql-data-warehouse-project\datasets\source_erp\LOC_A101.csv'
+BUlK INsert bronze.erp_LOC_A101 FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_erp\\LOC_A101.csv'
 with (
-	FirstRow=2,
-	fieldterminator=','
+    FirstRow=2,
+    fieldterminator=','
 )
 
 Truncate table bronze.erp_PX_CAT_G1V2
-BUlK INsert bronze.erp_PX_CAT_G1V2 FROM 'C:\Users\MY PC\Documents\sql-data-warehouse-project\datasets\source_erp\PX_CAT_G1V2.csv'
+BUlK INsert bronze.erp_PX_CAT_G1V2 FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_erp\\PX_CAT_G1V2.csv'
 with (
-	FirstRow=2,
-	fieldterminator=','
+    FirstRow=2,
+    fieldterminator=','
 )
 """)
 conn.commit()
 
 
 
+
 # --- Close ---
 cursor.close()
 conn.close()
-#printing execution time
+# printing execution time
 now = datetime.now()
 print(int(now.strftime("%S"))-int(current_time))
 
