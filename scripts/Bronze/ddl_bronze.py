@@ -29,7 +29,7 @@ cursor = conn.cursor()
 
 
 cursor.execute(r"""
-IF OBJECT_ID('bronze.crm_cust_info ', 'U') IS NOT NULL
+IF OBJECT_ID('bronze.crm_cust_info', 'U') IS NOT NULL
     DROP TABLE bronze.crm_cust_info ;
 CREATE TABLE bronze.crm_cust_info (
     cst_id INT,
@@ -85,7 +85,7 @@ create table bronze.erp_LOC_A101 (
 	CNTRY nvarchar(50)
 )
 
-IF OBJECT_ID('bronze.erp_PX_CAT_G1V2 ', 'U') IS NOT NULL
+IF OBJECT_ID('bronze.erp_PX_CAT_G1V2', 'U') IS NOT NULL
     DROP TABLE bronze.erp_PX_CAT_G1V2;
 create table bronze.erp_PX_CAT_G1V2 (
 	ID nvarchar(50),
