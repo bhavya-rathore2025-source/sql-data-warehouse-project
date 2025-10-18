@@ -101,6 +101,7 @@ CREATE TABLE silver.erp_PX_CAT_G1V2 (
 ); 
 """)
 
+#ignore This Coomment(verified badge testing)
 conn.commit()
 # --- Close ---
 cursor.close()
