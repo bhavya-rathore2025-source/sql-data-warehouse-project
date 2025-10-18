@@ -100,7 +100,7 @@ CREATE TABLE silver.erp_PX_CAT_G1V2 (
     dwh_create_date DATETIME2 DEFAULT GETDATE()
 ); 
 """)
-
+print("testing something")
 #ignore This Coomment(verified badge testing)
 conn.commit()
 # --- Close ---
