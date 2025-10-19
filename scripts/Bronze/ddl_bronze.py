@@ -97,12 +97,12 @@ create table bronze.erp_PX_CAT_G1V2 (
 conn.commit()
 
 #Loading the data into tabel(truncate and load)
-
+#IMPORTANT: SQL Server BULK INSERT requires an absolute path accessible by the SQL Server service.
+#Example absolute path (update as needed):
+#BULK INSERT bronze.crm_cust_info FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_crm\\cust_info.csv'
 cursor.execute(r"""
 use DataWarehouse
--- IMPORTANT: SQL Server BULK INSERT requires an absolute path accessible by the SQL Server service.
--- Example absolute path (update as needed):
--- BULK INSERT bronze.crm_cust_info FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_crm\\cust_info.csv'
+
 Truncate table bronze.crm_cust_info
 BUlK INsert bronze.crm_cust_info FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_crm\\cust_info.csv'
 with (
@@ -142,8 +142,6 @@ with (
 )
 """)
 conn.commit()
-
-
 
 
 # --- Close ---
