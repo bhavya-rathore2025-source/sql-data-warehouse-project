@@ -29,6 +29,7 @@ cursor = conn.cursor()
 
 
 cursor.execute(r"""
+							 
 IF OBJECT_ID('bronze.crm_cust_info', 'U') IS NOT NULL
     DROP TABLE bronze.crm_cust_info ;
 CREATE TABLE bronze.crm_cust_info (
@@ -40,7 +41,7 @@ CREATE TABLE bronze.crm_cust_info (
     cst_gndr NVARCHAR(50),
     cst_create_date DATE
 );
-
+							 
 IF OBJECT_ID('bronze.crm_prd_info', 'U') IS NOT NULL
     DROP TABLE bronze.crm_prd_info;
 CREATE TABLE bronze.crm_prd_info (
@@ -52,8 +53,6 @@ CREATE TABLE bronze.crm_prd_info (
     prd_start_dt DATETIME,
     prd_end_dt DATETIME
 );
-
-
 
 IF OBJECT_ID('bronze.crm_sales_details', 'U') IS NOT NULL
     DROP TABLE bronze.crm_sales_details;
@@ -69,22 +68,22 @@ create table bronze.crm_sales_details (
 	sls_quantity int,
 	sls_price int
 )
-
+							 
 IF OBJECT_ID('bronze.erp_CUST_AZ12', 'U') IS NOT NULL
     DROP TABLE bronze.erp_CUST_AZ12;
-
 create table bronze.erp_CUST_AZ12 (
 	CID nvarchar(50),
 	BDATE date,
 	GEN nvarchar(50)
 )
+							 						 
 IF OBJECT_ID('bronze.erp_LOC_A101', 'U') IS NOT NULL
     DROP TABLE bronze.erp_LOC_A101;
 create table bronze.erp_LOC_A101 (
 	CID nvarchar(50),
 	CNTRY nvarchar(50)
 )
-
+							 
 IF OBJECT_ID('bronze.erp_PX_CAT_G1V2', 'U') IS NOT NULL
     DROP TABLE bronze.erp_PX_CAT_G1V2;
 create table bronze.erp_PX_CAT_G1V2 (
@@ -102,7 +101,7 @@ conn.commit()
 #BULK INSERT bronze.crm_cust_info FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_crm\\cust_info.csv'
 cursor.execute(r"""
 use DataWarehouse
-
+							 
 Truncate table bronze.crm_cust_info
 BUlK INsert bronze.crm_cust_info FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_crm\\cust_info.csv'
 with (
@@ -133,7 +132,6 @@ with (
     FirstRow=2,
     fieldterminator=','
 )
-
 Truncate table bronze.erp_PX_CAT_G1V2
 BUlK INsert bronze.erp_PX_CAT_G1V2 FROM 'C:\\Users\\MY PC\\Documents\\git\\sql-data-warehouse-project\\Source\\source_erp\\PX_CAT_G1V2.csv'
 with (

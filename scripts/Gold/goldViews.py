@@ -11,8 +11,6 @@ server = r'DESKTOP-5EU8KIE\SQLEXPRESS'      # e.g. r'DESKTOP-12345\\SQLEXPRESS'
 database = 'DataWarehouse'  # e.g. 'mydb'
 
 
-
-
 # --- Create connection ---
 conn = pyodbc.connect(
     'DRIVER={SQL Server};'
@@ -20,8 +18,13 @@ conn = pyodbc.connect(
 
 # --- Create cursor ---
 cursor = conn.cursor()
+cursor.execute("""drop view if exists gold.dm_customers;
+drop view if exists gold.fact_sales;
+drop view if exists gold.dm_products
+							 """)
+conn.commit()
+# --- Create Views ---
 cursor.execute(r"""
-	
 create view gold.dm_customers as  
 select   
 		ROW_NUMBER() over(order by cst_id) customer_key,  
@@ -39,8 +42,9 @@ left join silver.erp_CUST_AZ12 ca
 on ci.cst_key=ca.CID  
 left join silver.erp_LOC_A101 la  
 on ci.cst_key=la.CID
-
-
+""")
+conn.commit()
+cursor.execute("""
 create view Gold.dm_products as
 SELECT 
 		ROW_NUMBER() over(order by pn.prd_start_dt,pn.prd_id) as peoduct_key,     
@@ -54,8 +58,9 @@ SELECT
 		pn.prd_start_dt AS start_date 
 FROM silver.crm_prd_info pn LEFT JOIN silver.erp_px_cat_g1v2 pc     
 ON pn.cat_id = pc.id WHERE prd_end_dt IS NULL -- Filter out all historical data
-
-create view gold.fact_sales as  
+""")
+conn.commit()
+cursor.execute("""
 select   
 		sd.sls_ord_num as order_number,  
 		dp.product_id,  
@@ -70,12 +75,9 @@ from silver.crm_sales_details sd
 left join gold.dm_customers  dc  
 on sd.sls_cust_id=dc.customer_id  
 left join gold.dm_products dp  
-on sd.sls_prd_key=dp.product_number  
-  
-
+on sd.sls_prd_key=dp.product_number
 """)
 
-conn.commit()
 # --- Close ---
 cursor.close()
 conn.close()
