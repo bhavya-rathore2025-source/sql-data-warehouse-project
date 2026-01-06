@@ -1,4 +1,5 @@
 import pyodbc
+
 from datetime import datetime
 
 '''
@@ -24,6 +25,7 @@ conn = pyodbc.connect(
 
 # --- Create cursor ---
 cursor = conn.cursor()
+
 
 #Creating the tables if they do no exists
 

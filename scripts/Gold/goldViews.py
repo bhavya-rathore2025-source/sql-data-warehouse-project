@@ -18,25 +18,25 @@ conn = pyodbc.connect(
 
 # --- Create cursor ---
 cursor = conn.cursor()
-cursor.execute("""drop view if exists gold.dm_customers;
+cursor.execute("""drop view if exists gold.dim_customers;
 drop view if exists gold.fact_sales;
-drop view if exists gold.dm_products
+drop view if exists gold.dim_products
 							 """)
 conn.commit()
 # --- Create Views ---
 cursor.execute(r"""
-create view gold.dm_customers as  
+create view gold.dim_customers as  
 select   
 		ROW_NUMBER() over(order by cst_id) customer_key,  
 		ci.cst_id as customer_id,  
 		ci.cst_key as customer_number,  
-		ci.cst_firstname as customer_firstname,  
-		ci.cst_lastname as customer_lastname,  
-		ci.cst_material_status as customer_material_status,  
+		ci.cst_firstname as first_name,  
+		ci.cst_lastname as last_name,  
+		ci.cst_material_status as marital_status,  
 		case when cst_gndr is not null then ci.cst_gndr   
-		else coalesce(ca.GEN,'n/a') end customer_gender,  
-		ca.BDATE as customer_birthdate,  
-		la.CNTRY as customer_country  
+		else coalesce(ca.GEN,'n/a') end gender,  
+		ca.BDATE as birthdate,  
+		la.CNTRY as country  
 from Silver.crm_cust_info ci  
 left join silver.erp_CUST_AZ12 ca  
 on ci.cst_key=ca.CID  
@@ -45,9 +45,9 @@ on ci.cst_key=la.CID
 """)
 conn.commit()
 cursor.execute("""
-create view Gold.dm_products as
+create view Gold.dim_products as
 SELECT 
-		ROW_NUMBER() over(order by pn.prd_start_dt,pn.prd_id) as peoduct_key,     
+		ROW_NUMBER() over(order by pn.prd_start_dt,pn.prd_id) as product_key,     
 		pn.prd_id AS product_id,     
 		pn.prd_key AS product_number,     
 		pn.prd_nm AS product_name,    
@@ -61,6 +61,7 @@ ON pn.cat_id = pc.id WHERE prd_end_dt IS NULL -- Filter out all historical data
 """)
 conn.commit()
 cursor.execute("""
+create view gold.fact_sales as  
 select   
 		sd.sls_ord_num as order_number,  
 		dp.product_id,  
@@ -72,12 +73,12 @@ select
 		sd.sls_quantity as quantity,  
 		sd.sls_price as price  
 from silver.crm_sales_details sd  
-left join gold.dm_customers  dc  
+left join gold.dim_customers  dc  
 on sd.sls_cust_id=dc.customer_id  
-left join gold.dm_products dp  
+left join gold.dim_products dp  
 on sd.sls_prd_key=dp.product_number
 """)
-
+conn.commit()
 # --- Close ---
 cursor.close()
 conn.close()
